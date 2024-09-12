@@ -1,0 +1,39 @@
+version: "3.8"
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./docker/java/Dockerfile
+    ports:
+      - "8091:8091"
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION_MS: ${JWT_EXPIRATION_MS}
+    command: ["./mvnw", "spring-boot:run"]
+    volumes:
+      - ./my-blog-backend:/workspace/app
+    depends_on:
+      - db
+    
+  frontend:
+    build:
+      context: .
+      dockerfile: ./docker/node/Dockerfile
+    ports:
+      - "3030:3000"
+    command: ["yarn", "dev"]
+    volumes:
+      - ./my-blog-frontend:/workspace/app
+      
+  db:
+    image: mysql:8.3
+    environment:
+      MYSQL_DATABASE: blog
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3316:3306"
+    volumes:
+      - db-dev:/var/lib/mysql
+
+volumes:
+  db-dev:
