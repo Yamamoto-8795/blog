@@ -46,7 +46,7 @@ export default function Login() {
       const responseData = await response.json();
 
       localStorage.setItem('token', responseData.token);
-      router.push('/dashboard');
+      router.push('/articles');
     } catch (error) {
       if (error instanceof Error) {
         setError("general", { message: error.message });
